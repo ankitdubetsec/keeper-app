@@ -1,2 +1,1 @@
-# keeper2
-Created with CodeSandbox
+Note taking app created using react js

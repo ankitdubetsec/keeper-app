@@ -1,9 +1,12 @@
+import axios from "axios";
 import React, { useState } from "react";
+
 
 function CreateArea(props) {
   const [note, setNote] = useState({
     title: "",
-    content: ""
+    content: "",
+    completed:false,
   });
 
   function handleChange(event) {
@@ -21,8 +24,17 @@ function CreateArea(props) {
     props.onAdd(note);
     setNote({
       title: "",
-      content: ""
+      content: "",
+      completed:false,
     });
+    axios
+    .post('http://localhost:5500/api/v1/notes',note)
+    .then(()=>{
+     console.log("posted sucesssfully")
+    })
+    .catch((error)=>{
+      console.log(error)
+    })
     event.preventDefault();
   }
 

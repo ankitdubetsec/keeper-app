@@ -43,19 +43,7 @@ const createnote=async (req, res) => {
     
 }
 const updatenote= async (req, res) => {
-    // try {
-    //     if (!req.body.title || !req.body.content) {
-    //         return res.status(400).send({ message: "send all the details" })
-    //     }
-    //     const { id } = req.params
-
-    //     const note = await Note.findByIdAndUpdate(id, req.body)
-    //     return res.status(201).send(note)
-    // } catch (error) {
-    //     console.log(error.message)
-    // }
-    // res.send("updatenote here")
-
+    
     try {
         const {id:taskid} =req.params
         const note=await Note.findOneAndUpdate({_id:taskid},req.body,{

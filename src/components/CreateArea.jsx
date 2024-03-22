@@ -28,7 +28,7 @@ function CreateArea(props) {
       completed:false,
     });
     axios
-    .post('http://localhost:5500/api/v1/notes',note)
+    .post('https://keeper-app-1.onrender.com/api/v1/notes',note)
     .then(()=>{
      console.log("posted sucesssfully")
     })

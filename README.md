@@ -1,5 +1,5 @@
 To do app created using react js Node js and MongoDb
-Steps to run application locally
+## Steps to run application locally
 
 ## Prerequisites
 

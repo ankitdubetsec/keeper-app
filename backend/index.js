@@ -23,18 +23,7 @@ app.get('/',(req,res)=>{
 
 
 
-// mongoose.connect('mongodb+srv://ankitdube164:0lnvpMVnWwvq8X7b@cluster0.3hxsdkc.mongodb.net/notes')
-// .then(()=>{
-//   console.log("app connected to database")
-//   app.listen(5500,()=>{
-//     console.log("listening to port 5500");
-// })
-// }
-// )
-// .catch((error)=>{
-//     console.log(error)
 
-// })
 
 const start=async()=>{
     try{

@@ -41,7 +41,7 @@ useEffect(() => {
   console.log("rendered2");
 
   axios
-    .get(`https://keeper-app-1.onrender.com/v1/notes/${props.id}`)
+    .get(`http://localhost:5500/api/v1/notes/${props.id}`)
     .then((res) => {
     //  console.log(res.data);
       settit(res.data.title);
@@ -76,7 +76,7 @@ const updateNote=async()=>{
     
   };
   try {
-    const response=await axios.patch(`https://keeper-app-1.onrender.com/v1/notes/${props.id}`,data);
+    const response=await axios.patch(`http://localhost:5500/api/v1/notes/${props.id}`,data);
     const updatedNote = response.data;
       
       // Update the state of notes by mapping over the existing array
@@ -98,11 +98,13 @@ function submitNote(){
   
 }
 console.log(props.completed)
+console.log(props.due)
   return (
     <div className="note">
       <h1>{props.title}</h1>
       <p>{props.content}</p>
       {props.completed&&<h1>Completed</h1>}
+      {!props.completed&&<h1>{props.due.slice(0, 10)}</h1>}
       <button onClick={handleClick}>DELETE</button>
       <button onClick={handleClick2}>EDIT</button>
       {isshown&&<div>

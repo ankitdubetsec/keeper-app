@@ -28,7 +28,7 @@ function CreateArea(props) {
       completed:false,
     });
     axios
-    .post('https://keeper-app-1.onrender.com/api/v1/notes',note)
+    .post('http://localhost:5500/api/v1/notes',note)
     .then(()=>{
      console.log("posted sucesssfully")
     })
@@ -47,11 +47,13 @@ function CreateArea(props) {
           value={note.title}
           placeholder="Title"
         />
+        
+        <input name="due" type="Date" onChange={handleChange} value={note.due} placeholder="Due date"></input>
         <textarea
           name="content"
           onChange={handleChange}
           value={note.content}
-          placeholder="Take a note..."
+          placeholder="Description..."
           rows="3"
         />
         <button onClick={submitNote}>Add</button>

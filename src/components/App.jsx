@@ -18,7 +18,7 @@ function App() {
     console.log("rendered");
 
     axios
-      .get('https://keeper-app-2.onrender.com/api/v1/notes')
+      .get('http://localhost:5500/api/v1/notes')
       .then((res) => {
       //  console.log(res.data);
         setNotes(res.data.note);
@@ -62,7 +62,7 @@ function App() {
   //  }
    const deleteNote = async (taskId) => {
         try {
-          await axios.delete(`https://keeper-app-1.onrender.com/api/v1/notes/${taskId}`);
+          await axios.delete(`http://localhost:5500/api/v1/notes/${taskId}`);
           setNotes(notes.filter(task => task._id !== taskId));
         } catch (error) {
           console.error('Error deleting task:', error);
@@ -84,9 +84,8 @@ function App() {
           title={notee.title}
           content={notee.content}
           completed={notee.completed}
-         onDelete={()=>deleteNote(notee._id)} // Pass deleteNote as a callback
-
-         //onUpdate={()=>updateNote(notee._id,tit,cont)} // Pass deleteNote as a callback
+          due={notee.due}
+         onDelete={()=>deleteNote(notee._id)} 
         />
       ))}
       

@@ -16,7 +16,7 @@ const DeleteBook = () => {
   const handleDeleteBook = () => {
     setLoading(true);
     axios
-      .delete(`https://keeper-app-1.onrender.com/notes/${id}`)
+      .delete(`http://localhost:5000/notes/${id}`)
       .then(() => {
         setLoading(false);
       //  enqueueSnackbar('Book Deleted successfully', { variant: 'success' });

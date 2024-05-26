@@ -19,6 +19,10 @@ const noteschema=new mongoose.Schema(
             type:String,
             required: [true, 'must provide content'],
         },
+        due:{
+            type:Date,
+            required: [true, 'must provide content'],
+        },
         completed:{
             type:Boolean,
             default:false,

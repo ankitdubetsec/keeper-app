@@ -13,7 +13,21 @@ require('dotenv').config()
 //     'http://localhost:3000',
 //     'https://66597fae3975c9ef0dea3b09--flourishing-cat-b6127f.netlify.app'
 //   ];
-app.use(cors({ origin: 'https://66597fae3975c9ef0dea3b09--flourishing-cat-b6127f.netlify.app' })); // Replace with the actual origin of your frontend
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://66597fae3975c9ef0dea3b09--flourishing-cat-b6127f.netlify.app',
+    'https://flourishing-cat-b6127f.netlify.app/'
+  ];
+  
+  app.use(cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    }
+  }));
 
 app.use(express.json())
 

@@ -9,8 +9,11 @@ const connectdb=require('./db/connect.js')
 require('dotenv').config()
 // const {mongodbURL}=require('./config.js}')
 
-
-app.use(cors({ origin: 'http://localhost:3000' })); // Replace with the actual origin of your frontend
+// const allowedOrigins = [
+//     'http://localhost:3000',
+//     'https://66597fae3975c9ef0dea3b09--flourishing-cat-b6127f.netlify.app'
+//   ];
+app.use(cors({ origin: 'https://66597fae3975c9ef0dea3b09--flourishing-cat-b6127f.netlify.app' })); // Replace with the actual origin of your frontend
 
 app.use(express.json())
 

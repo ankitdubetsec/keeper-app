@@ -16,7 +16,8 @@ require('dotenv').config()
 const allowedOrigins = [
     'http://localhost:3000',
     'https://66597fae3975c9ef0dea3b09--flourishing-cat-b6127f.netlify.app',
-    'https://flourishing-cat-b6127f.netlify.app/'
+    'https://flourishing-cat-b6127f.netlify.app/',
+    'https://main--flourishing-cat-b6127f.netlify.app/'
   ];
   
   app.use(cors({

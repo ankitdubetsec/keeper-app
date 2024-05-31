@@ -76,7 +76,7 @@ const updateNote=async()=>{
     
   };
   try {
-    const response=await axios.patch(`https://to-do-szns.onrender.com/v1/notes/${props.id}`,data);
+    const response=await axios.patch(`https://to-do-szns.onrender.com/api/v1/notes/${props.id}`,data);
     const updatedNote = response.data;
       
       // Update the state of notes by mapping over the existing array

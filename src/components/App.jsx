@@ -18,7 +18,7 @@ function App() {
     console.log("rendered");
 
     axios
-      .get('http://localhost:5500/api/v1/notes')
+      .get('https://to-do-szns.onrender.com/api/v1/notes')
       .then((res) => {
       //  console.log(res.data);
         setNotes(res.data.note);
@@ -62,7 +62,7 @@ function App() {
   //  }
    const deleteNote = async (taskId) => {
         try {
-          await axios.delete(`http://localhost:5500/api/v1/notes/${taskId}`);
+          await axios.delete(`https://to-do-szns.onrender.com/api/v1/notes/${taskId}`);
           setNotes(notes.filter(task => task._id !== taskId));
         } catch (error) {
           console.error('Error deleting task:', error);

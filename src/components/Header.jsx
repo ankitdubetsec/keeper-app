@@ -6,10 +6,12 @@ import { jwtDecode } from 'jwt-decode';
 function Header() {
   const token = localStorage.getItem('token');
 let decodedToken
+let nam="user"
         if (token) {
             // Decode the token to get user information
              decodedToken = jwtDecode(token);
             console.log(decodedToken.student.name)
+            nam=decodedToken.student.name
            // setname(decodedToken.student.name)
         }
   return (
@@ -21,7 +23,8 @@ let decodedToken
     }}>
       <h1 style={{ margin: 0 }}>TO DO</h1>
       <div style={{ display: 'flex', gap: '10px' }}>
-      <h1>{`Hi ${decodedToken.student.name}!`}</h1>
+        
+      <h1>{`Hi ${nam}!`}</h1>
         <Link to="/">
           <button 
             style={{

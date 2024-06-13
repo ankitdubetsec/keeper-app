@@ -1,5 +1,4 @@
 To do app created using react js Node js and MongoDb
-
 Demonstration video :https://www.loom.com/share/f74affd48e6a46b9ab4c9446874880a2?sid=2a2be775-f4e4-47f0-8326-9851f08d03d1
 ## Steps to run application locally
 

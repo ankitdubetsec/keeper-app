@@ -1,142 +1,158 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 import DeleteBook from "./DeleteBook";
-import  { useEffect } from "react";
 import './note.css'
+import Extra from './Extra'
+import { jwtDecode } from 'jwt-decode';
+import Star from "./Star";
 
-function Note(props) {
+function Note() {
+  const [notes, setNotes] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [editNoteId, setEditNoteId] = useState(null);
+  const [tit, settit] = useState('');
+  const [cont, setcont] = useState('');
+  const [comp, setcomp] = useState(false);
+  const [fav, setfav] = useState(false);
 
-  // const { id } = useParams(); 
-  // function handleClick() {
-  //   console.log(id)
-  //   axios.delete(`http://localhost:5000/notes/${id}`)
-  //     // .then(() => {
-  //     //   // If the deletion was successful on the server, update the state
-  //     //   props.setNotes(prevNotes => prevNotes.filter(note => note.id !== id));
-  //     //   console.log("Deleted successfully");
-  //     // })
-  //     // .catch(error => {
-  //     //   console.error("Error deleting note:", error);
-  //     // });
-    
-  // }
-// console.log(props)
-function handleClick() {
-  props.onDelete(props.id);
-  console.log(props)
-  console.log("at delete")
+  useEffect(() => {
+    console.log("rendered");
 
-}
-let [isshown,setisshown]=React.useState(false)
-let [tit,settit]=React.useState('')
-let [cont,setcont]=React.useState('')
-let [comp,setcomp]=React.useState(false)
-// let [data,setdata]=React.useState({
-//   title:"",
-//   content:""
-// })
-useEffect(() => {
-  //setLoading(true);
-  console.log("rendered2");
+    axios
+      .get('http://localhost:5500/api/v1/notes', {
+        headers: {
+          'auth-token': localStorage.getItem('token'),
+          'Content-Type': 'application/json',
+        },
+        params: {
+          query: searchQuery,
+        }
+      })
+      .then((res) => {
+        setNotes(res.data.note);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [searchQuery]);
 
-  axios
-    .get(`https://to-do-szns.onrender.com/api/v1/notes/${props.id}`)
-    .then((res) => {
-    //  console.log(res.data);
-      settit(res.data.title);
-      setcont(res.data.content);
-     // setLoading(false);
-    })
-    .catch((error) => {
-      console.log(error);
-      //setLoading(false);
-    });
-}, []);
-function handleClick2() {
-
-  
-  
-    setisshown(prevstate=>!prevstate)
-   
- 
-  // console.log(props)
-  // console.log("at delete")
-
-}
-const updateNote=async()=>{
-  // const title2=prompt("enter new title")
-  // const content2=prompt("enter new content")
-  // const completed2=prompt("completed?")
-  console.log(tit);
-  const data = {
-    title:tit,
-    content:cont,
-    completed:comp,
-    
+  const deleteNote = async (taskId) => {
+    try {
+      await axios.delete(`http://localhost:5500/api/v1/notes/${taskId}`, {
+        headers: {
+          'auth-token': localStorage.getItem('token'),
+          'Content-Type': 'application/json',
+        }
+      });
+      setNotes(notes.filter(task => task._id !== taskId));
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
   };
-  try {
-    const response=await axios.patch(`https://to-do-szns.onrender.com/api/v1/notes/${props.id}`,data);
-    const updatedNote = response.data;
-      
-      // Update the state of notes by mapping over the existing array
-      // If the task ID matches the updated note, replace it with the updated note
-      // Otherwise, keep the task as it is
-      setNotes(notes.map(task => task._id === props.id ? updatedNote : data));
-    //setNotes();
-  } catch (error) {
-    console.error('Error deleting task:', error);
-  }
-  console.log("update function")
-}
-function submitNote(){
 
-  console.log("submit")
-  setisshown(prevstate=>!prevstate)
-  console.log(tit)
-  //props.onUpdate(props.id,tit,cont);
-  
+  const updateNote = async () => {
+    const data = {
+      title: tit,
+      content: cont,
+      completed: comp,
+      isfav:fav,
+    };
+    try {
+      const response = await axios.patch(`http://localhost:5500/api/v1/notes/${editNoteId}`, data, {
+        headers: {
+          'auth-token': localStorage.getItem('token'),
+          'Content-Type': 'application/json',
+        }
+      });
+      const updatedNote = response.data;
+      setNotes(notes.map(note => note._id === editNoteId ? updatedNote : note));
+      setEditNoteId(null);
+      settit('');
+      setcont('');
+      setcomp(false);
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
+
+  const handleEditClick = (note) => {
+    setEditNoteId(note._id);
+    settit(note.title);
+    setcont(note.content);
+    setcomp(note.completed);
+  };
+
+  const submitNote = () => {
+    setEditNoteId(null);
+    settit('');
+    setcont('');
+    setcomp(false);
+  };
+  function clickk(){
+    setfav(
+        prevstate=>!prevstate
+    )
+    updateNote()
 }
-console.log(props.completed)
-console.log(props.due)
   return (
-    <div className="note">
-      <h1>{props.title}</h1>
-      <p>{props.content}</p>
-      {props.completed&&<h1>Completed</h1>}
-      {!props.completed&&<h1>{props.due.slice(0, 10)}</h1>}
-      <button onClick={handleClick}>DELETE</button>
-      <button onClick={handleClick2}>EDIT</button>
-      {isshown&&<div>
-      <form>
-        <input
-          name="title"
-          onChange={(e)=>settit(e.target.value)}
-          value={tit}
-           placeholder="Edit Title"
-        />
-        <textarea
-          name="content"
-          onChange={(e)=>setcont(e.target.value)}
-          value={cont}
-          placeholder="Edit Note"
-          rows="3"
-        />
-        <label >completed</label>
-         <input className="radinp"
-          name="completed"
-          type="checkbox"
-          onChange={(e)=>setcomp(prev=>!prev)}
-          value={comp}
-          placeholder="Completed"
-           
-        />
-        <button className='addbtn' onClick={updateNote}>Update</button>
-      </form>
-    </div>
-}
-      
-    </div>
+    <>
+      <input
+        name="search"
+        onChange={(e) => setSearchQuery(e.target.value)}
+        value={searchQuery}
+        placeholder="Search tasks..."
+        style={{
+          display: 'block',
+          width: '200px',
+          padding: '10px',
+          border: '1px solid #ddd',
+          borderRadius: '5px',
+          marginBottom: '20px',
+          marginLeft: '10px',
+          fontSize: '14px'
+        }}
+      />
+      {notes.map((note) => (
+        <div className="note" key={note._id}>
+          <h1>{note.title}</h1>
+          <p>{note.content}</p>
+          {note.isfav && <img src="images/star-filled.png"style={{width:"10%"}}></img>}
+        <h1>{note.due&&note.due.slice(0, 10)}</h1>
+
+          <button onClick={() => deleteNote(note._id)}>DELETE</button>
+          <button onClick={() => handleEditClick(note)}>EDIT</button>
+          {editNoteId === note._id && (
+            <div>
+              <form onSubmit={(e) => { e.preventDefault(); updateNote(); }}>
+                <input
+                  name="title"
+                  onChange={(e) => settit(e.target.value)}
+                  value={tit}
+                  placeholder="Edit Title"
+                />
+                <textarea
+                  name="content"
+                  onChange={(e) => setcont(e.target.value)}
+                  value={cont}
+                  placeholder="Edit Note"
+                  rows="3"
+                />
+                <label>favorite</label>
+                <input
+                  className="radinp"
+                  name="favorite"
+                  type="checkbox"
+                  onChange={() => setfav(prev => !prev)}
+                  checked={fav}
+                />
+                <button className='addbtn' type="submit">Update</button>
+              </form>
+            </div>
+          )}
+        </div>
+      ))}
+    </>
   );
 }
 

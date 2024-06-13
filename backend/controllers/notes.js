@@ -1,22 +1,58 @@
 const Note=require('../models/notemodel')
-const getallnotes=async (req, res) => {
-    // try {
-    //     const notes = await Note.find({})
-    //     return res.status(200).json({
-    //         count: notes.length,
-    //         data: notes
-    //     })
-    // } catch (error) {
-    //     console.log(error.message)
-
-    // }
+const getallnotes = async (req, res) => {
     try {
-        const notes= await Note.find({});
-        res.status(200).json({note:notes})
+        const { query, fields, page = 1, limit = 10 } = req.query;
+
+        let notesQuery;
+
+        const user = req.student; 
+        console.log(user);
+
+        if (query) {
+            notesQuery = Note.find({
+                user: user.id,
+                $or: [
+                    { title: { $regex: query, $options: 'i' } },
+                    { content: { $regex: query, $options: 'i' } }
+                ]
+            });
+        } else {
+            notesQuery = Note.find({ user: user.id });
+        }
+
+        if (fields) {
+            const fieldsList = fields.split(',').join(' ');
+            notesQuery = notesQuery.select(fieldsList);
+        }
+
+        const pageNumber = Number(page);
+        const limitNumber = Number(limit);
+        const skip = (pageNumber - 1) * limitNumber;
+
+        notesQuery = notesQuery.skip(skip).limit(limitNumber);
+
+        const notes = await notesQuery;
+        const totalNotes = await Note.countDocuments({
+            user: user.id,
+            $or: query ? [
+                { title: { $regex: query, $options: 'i' } },
+                { content: { $regex: query, $options: 'i' } }
+            ] : [{}]
+        });
+
+        res.status(200).json({
+            notes, 
+            totalNotes,
+            totalPages: Math.ceil(totalNotes / limitNumber),
+            currentPage: pageNumber
+        });
     } catch (error) {
-        res.status(500).json({msg:"an error occured"})
+        res.status(500).json({ msg: "An error occurred" });
     }
-}
+};
+
+
+
 const createnote=async (req, res) => {
     // try {
     //     if (!req.body.title || !req.body.content) {

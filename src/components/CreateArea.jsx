@@ -1,12 +1,25 @@
 import axios from "axios";
 import React, { useState } from "react";
+ import './styles.css'
+import { jwtDecode } from 'jwt-decode';
 
 
 function CreateArea(props) {
+  const token = localStorage.getItem('token');
+  let decodedToken
+          if (token) {
+              // Decode the token to get user information
+               decodedToken = jwtDecode(token);
+              console.log(decodedToken.student.name)
+             // setname(decodedToken.student.name)
+          }
+  console.log(props)
   const [note, setNote] = useState({
     title: "",
     content: "",
     completed:false,
+    user:decodedToken.student.id,
+    isfav:false,
   });
 
   function handleChange(event) {
@@ -22,13 +35,15 @@ function CreateArea(props) {
 
   function submitNote(event) {
     props.onAdd(note);
-    setNote({
-      title: "",
-      content: "",
-      completed:false,
-    });
+   
     axios
-    .post('https://to-do-szns.onrender.com/api/v1/notes',note)
+    .post('http://localhost:5500/api/v1/notes',note, {
+      headers: {
+          'auth-token': localStorage.getItem('token'), // Replace with your actual token or any other header
+          'Content-Type': 'application/json', // Example header
+          // Add any other headers as needed
+      }
+  })
     .then(()=>{
      console.log("posted sucesssfully")
     })
@@ -37,6 +52,8 @@ function CreateArea(props) {
     })
     event.preventDefault();
   }
+
+ 
 
   return (
     <div>
@@ -58,6 +75,8 @@ function CreateArea(props) {
         />
         <button onClick={submitNote}>Add</button>
       </form>
+      
+      {props.icon}
     </div>
   );
 }

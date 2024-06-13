@@ -5,6 +5,12 @@ import Note from "./Note";
 import CreateArea from "./CreateArea";
 import axios from "axios";
 import { useParams } from 'react-router-dom';
+import {BrowserRouter as Router,Route,Routes} from "react-router-dom";
+import Login from "./Login";
+import Signup from './Signup'
+import Search from "./Search";
+// import './styles.css'
+
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -13,23 +19,7 @@ function App() {
   // Use useParams at the top level
   // console.log(id)
 
-  useEffect(() => {
-    setLoading(true);
-    console.log("rendered");
-
-    axios
-      .get('https://to-do-szns.onrender.com/api/v1/notes')
-      .then((res) => {
-      //  console.log(res.data);
-        setNotes(res.data.note);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-      });
-  }, []);
-  console.log(notes)
+ 
 
   function addNote(newNote) {
     setNotes(prevNotes => {
@@ -62,7 +52,13 @@ function App() {
   //  }
    const deleteNote = async (taskId) => {
         try {
-          await axios.delete(`https://to-do-szns.onrender.com/api/v1/notes/${taskId}`);
+          await axios.delete(`http://localhost:5500/api/v1/notes/${taskId}`, {
+            headers: {
+                'auth-token': localStorage.getItem('token'), // Replace with your actual token or any other header
+                'Content-Type': 'application/json', // Example header
+                // Add any other headers as needed
+            }
+        });
           setNotes(notes.filter(task => task._id !== taskId));
         } catch (error) {
           console.error('Error deleting task:', error);
@@ -75,8 +71,26 @@ function App() {
 
   return (
     <div>
+      <Router>
       <Header />
-      <CreateArea onAdd={addNote} />
+      <Routes>
+        <Route exact path='/' element={<Login />} />
+        <Route exact path='/signup' element={<Signup />} />
+         {/* <Route path="/login" element={<Login/>} />  */}
+
+        <Route exact path='/tasks' element={<CreateArea onAdd={addNote} Search={<Search/>}icon={
+        <Note
+        //   key={notee._id}
+        //   id={notee._id}
+        //   title={notee.title}
+        //   content={notee.content}
+        //   completed={notee.completed}
+        //   due={notee.due}
+        //  onDelete={()=>deleteNote(notee._id)} 
+        />
+      }/>} />
+       </Routes>
+      {/* <CreateArea onAdd={addNote} />
       {notes.map((notee) => (
         <Note
           key={notee._id}
@@ -87,8 +101,8 @@ function App() {
           due={notee.due}
          onDelete={()=>deleteNote(notee._id)} 
         />
-      ))}
-      
+      ))} */}
+      </Router>
     </div>
   );
 }

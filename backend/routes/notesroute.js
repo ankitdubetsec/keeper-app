@@ -5,7 +5,6 @@ const Students = require("../models/StudentsData.js");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { toast } = require("react-toastify");
 
 const fetchStudent = require("../middlewares/fetchStudent.js");
 // import { getallnotes } from '../controllers/notes.js'

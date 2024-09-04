@@ -9,7 +9,7 @@ export default function Extra(){
         {
             name:"ankit dubey",
             cont:766454511,
-            istrue:true
+            isfav:true
         }
     )
 
